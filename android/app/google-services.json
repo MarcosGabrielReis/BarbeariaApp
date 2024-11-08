@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "432065485404",
+    "project_id": "gestaobarbearia-153fc",
+    "storage_bucket": "gestaobarbearia-153fc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432065485404:android:947a08ee8da0a37bdc2499",
+        "android_client_info": {
+          "package_name": "com.mitchkoko.barbearia_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0dN_t9BiNht1Q5_k1Q4tvXqw-m4wgXsk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
