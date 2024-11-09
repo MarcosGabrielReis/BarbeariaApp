@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'login_page.dart';
+import 'package:barbearia_app/main_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 
 // Função principal que inicializa o aplicativo Flutter e fornece os widgets que serão as raízes da aplicação.
 // Executa o aplicativo e fornece o widget de raiz que será exibido.
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MeuApp());
 }
 
@@ -19,7 +23,7 @@ class MeuApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: MainPage(),
     );  
   }
 }
