@@ -1,11 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// Classe LoginPage que representa a página de login, é um widget com estado (StatefulWidget).
-// Construtor da classe LoginPage, que aceita uma chave opcional.
-// Método que cria o estado para a LoginPage.
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -13,19 +9,64 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-// Classe que gerencia o estado da LoginPage.
-// Método que constrói a interface do widget.
-// Retorna um Scaffold, que é um layout básico para a página.
 class _LoginPageState extends State<LoginPage> {
-  //Controle dos campos
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
+  bool _obscurePassword = true;
 
-  Future entrar() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(), 
-      password: _senhaController.text.trim(),
+  Future<void> entrar() async {
+    // Verificação dos campos vazios
+    if (_emailController.text.isEmpty || _senhaController.text.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Atenção'),
+          content: const Text('Por favor, preencha todos os campos.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
       );
+      return;
+    }
+
+    // Carregamento com tratamento de erros
+    showDialog(
+      context: context,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _senhaController.text.trim(),
+      );
+      // Fechar carregamento após sucesso
+      if (mounted) Navigator.of(context).pop();
+    // ignore: unused_catch_clause
+    } on FirebaseAuthException catch (e) {
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop();
+      
+      // Exibir mensagem de erro padrão para email/senha incorretos
+      showDialog(
+        // ignore: use_build_context_synchronously
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Erro'),
+          content: const Text('E-mail ou senha incorretos.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
@@ -38,137 +79,130 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueAccent[300],
+      backgroundColor: const Color.fromARGB(255, 73, 114, 133),
       body: SafeArea(
-          child: Center(
-        child: SingleChildScrollView(
-          //Usado para não causar divergencia entra os campos e o teclado
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              //imagem
-              Image.asset(
-                'assets/UniSenaiBarbearia.png', // Caminho relativo da imagem
-                height: 170, // Defina a altura que preferir
-                width: 295, // Defina a largura que preferir
-              ),
-              //Barbearia Senai!
-              Text(
-                'Barbearia UniSenai',
-                style: GoogleFonts.bebasNeue(
-                  fontSize: 52,
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Imagem
+                Image.asset(
+                  'assets/UniSenaiBarbearia.png',
+                  height: 170,
+                  width: 295,
                 ),
-              ),
-
-              SizedBox(height: 7),
-
-              Text(
-                'Faça login e cuide do seu visual com a gente!',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-
-              SizedBox(height: 40),
-
-              //email campo de texto
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12)),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.blue,
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    hintText: 'E-mail',
-                    fillColor: Colors.grey[200],
-                    filled: true,
+                // Título
+                Text(
+                  'Barbearia UniSenai',
+                  style: GoogleFonts.bebasNeue(
+                    fontSize: 52,
+                    color: Colors.white,
                   ),
                 ),
-              ),
-
-              SizedBox(height: 10),
-
-              //senha campo de texto
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: TextField(
-                  controller: _senhaController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12)),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.blue,
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    hintText: 'Senha',
-                    fillColor: Colors.grey[200],
-                    filled: true,
+                const SizedBox(height: 7),
+                const Text(
+                  'Faça login e cuide do seu visual com a gente!',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
                   ),
                 ),
-              ),
+                const SizedBox(height: 40),
+                
+                // Campo de e-mail
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.blue),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      hintText: 'E-mail',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
 
-              SizedBox(height: 10),
+                // Campo de senha
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: TextField(
+                    controller: _senhaController,
+                    obscureText: _obscurePassword,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12)),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.blue),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      hintText: 'Senha',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
 
-              //entrar botão
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: GestureDetector(
-                onTap: entrar,
-                  child: Container(
-                    decoration: BoxDecoration(
+                // Botão Entrar com sombra
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: GestureDetector(
+                    onTap: entrar,
+                    child: Container(
+                      decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 75, 138, 248),
-                        borderRadius: BorderRadius.circular(12)),
-                    padding: EdgeInsets.all(20),
-                    child: Center(
-                      child: Text(
-                        'Entrar',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            spreadRadius: 1,
+                            blurRadius: 5,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.all(20),
+                      child: const Center(
+                        child: Text(
+                          'Entrar',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-
-              SizedBox(height: 25),
-
-              //Ainda não tem conta? Registre-se aqui! Link
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Ainda não tem conta?',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    ' Registre-se aqui!',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              )
-            ],
+                const SizedBox(height: 25),
+              ],
+            ),
           ),
         ),
-      )),
+      ),
     );
   }
 }
