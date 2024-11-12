@@ -17,7 +17,10 @@ class _ServicosPageState extends State<ServicosPage> {
       //backgroundColor: const Color.fromARGB(255, 73, 114, 133),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 73, 114, 133),
-        title: const Text('Serviços Disponíveis'),
+        title: const Text('Serviços Disponíveis',
+        style: TextStyle(color: Colors.white), // Cor do texto do título
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: FutureBuilder<QuerySnapshot>(
         future: _firestore.collection('servicos').get(),

@@ -28,7 +28,10 @@ class _AgendarLocaisPageState extends State<AgendarLocaisPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 73, 114, 133),
-        title: const Text('Escolha o Local'),
+        title: const Text('Escolha o Local',
+        style: TextStyle(color: Colors.white), // Cor do texto do título
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: getLocaisStream(), // Ouve as atualizações na coleção 'enderecos_barbearia'
@@ -92,7 +95,9 @@ class _AgendarLocaisPageState extends State<AgendarLocaisPage> {
                       selectedLocal == null ? Colors.grey : const Color.fromARGB(255, 73, 114, 133),
                     ),
                   ),
-                  child: const Text('Próximo'),
+                  child: const Text('Próximo',
+                  style: TextStyle(color: Colors.white), // Cor do texto do título
+                  ),
                 ),
               ),
             ],

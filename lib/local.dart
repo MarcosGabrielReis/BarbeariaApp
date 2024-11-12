@@ -9,7 +9,10 @@ class LocalPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 73, 114, 133),
-        title: Text("Mapa Local"),
+        title: Text("Mapa Local",
+        style: TextStyle(color: Colors.white), // Cor do texto do título
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

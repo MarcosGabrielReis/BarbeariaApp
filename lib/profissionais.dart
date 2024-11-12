@@ -18,8 +18,11 @@ class _ProfissionaisPageState extends State<ProfissionaisPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profissionais'),
+        title: const Text('Profissionais',
+        style: TextStyle(color: Colors.white), // Cor do texto do título
+        ),
         backgroundColor: const Color.fromARGB(255, 73, 114, 133),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       //backgroundColor: const Color.fromARGB(255, 73, 114, 133),
       body: StreamBuilder<QuerySnapshot>(
